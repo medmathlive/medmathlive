@@ -347,3 +347,16 @@ footer{
 .multi-line {
   white-space: pre-line;
 }
+
+@media (max-width: 600px) {
+  .lang-btn {
+    padding: 4px 6px;   /* smaller padding */
+    font-size: 0.5rem; /* smaller text */
+  }
+
+  .flag-icon {
+    width: 10px;        /* smaller flag */
+    height: 10px;
+    margin-right: 2px;
+  }
+}
