@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedMathLive</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="background-glow"></div>
+
+  <main class="container">
+
+    <!-- ================= CARD ================= -->
+    <section class="links-section">
+
+  <div class="link-card">
+
+    <div class="link-left">
+
+      <div class="icon-box">
+        <img src="images/clipboard-check.png" class="custom-icon">
+      </div>
+
+      <div>
+        <h3>Les résultats dont nous sommes fiers</h3>
+        <p>Résultats des élèves des années précédentes</p>
+      </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">
+      ‹ Retour
+    </a>
+
+  </div>
+
+</section>
+
+   <div style="height:20px;"></div>
+
+    <!-- ================= SLIDER ================= -->
+    <section class="slider-container">
+
+      <div class="slider">
+
+        <button class="slider-btn left" id="prevBtn">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="slider-track" id="sliderTrack"></div>
+
+        <button class="slider-btn right" id="nextBtn">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+      </div>
+
+      <div class="dots" id="dots"></div>
+
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+      <p>© 2026 MedMathLive | Tous droits réservés</p>
+    </footer>
+
+  </main>
+
+  <!-- ================= SCRIPT ================= -->
+  <script>
+    const track = document.getElementById("sliderTrack");
+    const dotsContainer = document.getElementById("dots");
+
+    let images = [];
+    let currentIndex = 0;
+
+    function loadImages() {
+      let i = 1;
+
+      function tryLoad() {
+        const img = new Image();
+        img.src = `images_resultats/${i}.png`;
+
+        img.onload = () => {
+          images.push(img.src);
+          i++;
+          tryLoad();
+        };
+
+        img.onerror = () => buildSlider();
+      }
+
+      tryLoad();
+    }
+
+    function buildSlider() {
+      if (!images.length) return;
+
+      images.forEach((src, index) => {
+        const img = document.createElement("img");
+        img.src = src;
+        track.appendChild(img);
+
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        if (index === 0) dot.classList.add("active");
+        dotsContainer.appendChild(dot);
+      });
+
+      updateSlider();
+    }
+
+    function updateSlider() {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentIndex);
+      });
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateSlider();
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateSlider();
+    });
+
+    let startX = 0;
+
+    track.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+    });
+
+    track.addEventListener("touchend", e => {
+      let endX = e.changedTouches[0].clientX;
+
+      if (startX - endX > 50) currentIndex = (currentIndex + 1) % images.length;
+      else if (endX - startX > 50) currentIndex = (currentIndex - 1 + images.length) % images.length;
+
+      updateSlider();
+    });
+
+    loadImages();
+  </script>
+
+</body>
+</html>

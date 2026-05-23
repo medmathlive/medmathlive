@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedMathLive</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="background-glow"></div>
+
+  <main class="container">
+
+    <section class="links-section">
+      <div class="link-card">
+        <div class="link-left">
+          <div class="icon-box">
+            <img src="images/offreinfo.png" class="custom-icon big-icon">
+          </div>
+
+          <div>
+            <h3>Les informations de l’offre</h3>
+            <p>Découvrez toutes les informations de l’offre</p>
+          </div>
+        </div>
+
+        <a href="index.html" class="back-btn">‹ Retour</a>
+      </div>
+    </section>
+
+    <div style="height:20px;"></div>
+
+    <!-- ================= SLIDER ================= -->
+    <section class="slider-container zoom-slider">
+
+      <div class="slider">
+
+        <button class="slider-btn left" id="prevBtn">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="slider-track" id="sliderTrack"></div>
+
+        <button class="slider-btn right" id="nextBtn">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+      </div>
+
+      <div class="dots" id="dots"></div>
+
+    </section>
+
+    <footer>
+      <p>© 2026 MedMathLive | Tous droits réservés</p>
+    </footer>
+
+  </main>
+
+<script>
+const track = document.getElementById("sliderTrack");
+const dotsContainer = document.getElementById("dots");
+
+let media = [];
+let currentIndex = 0;
+
+/* ================= DATA ================= */
+function loadImages() {
+  media = [
+    { type: "image", src: "images_infoes/1.jpg" },
+    { type: "image", src: "images_infoes/2.jpg" },
+    {
+      type: "video",
+      src: "https://drive.google.com/file/d/169_hVtHUz4737mKLHi35zJ0K5yZdpOM9/preview"
+    }
+  ];
+
+  buildSlider();
+}
+
+/* ================= BUILD SLIDER ================= */
+function buildSlider() {
+  if (!media.length) return;
+
+  media.forEach((item, index) => {
+
+    const slide = document.createElement("div");
+    slide.classList.add("slide");
+
+    if (item.type === "image") {
+      const img = document.createElement("img");
+      img.src = item.src;
+      slide.appendChild(img);
+    }
+
+    if (item.type === "video") {
+      const iframe = document.createElement("iframe");
+      iframe.src = item.src;
+      iframe.width = "100%";
+      iframe.height = "100%";
+      iframe.style.border = "none";
+      iframe.allow = "autoplay";
+      slide.appendChild(iframe);
+    }
+
+    track.appendChild(slide);
+
+    const dot = document.createElement("div");
+    dot.classList.add("dot");
+    if (index === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  });
+
+  updateSlider();
+}
+
+/* ================= SLIDER MOVE ================= */
+function updateSlider() {
+  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentIndex);
+  });
+}
+
+/* ================= BUTTONS ================= */
+document.getElementById("nextBtn").addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % media.length;
+  updateSlider();
+});
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + media.length) % media.length;
+  updateSlider();
+});
+
+/* ================= MOBILE SWIPE FIX ================= */
+const slider = document.querySelector(".slider");
+
+let startX = 0;
+
+slider.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+});
+
+slider.addEventListener("touchend", (e) => {
+  let endX = e.changedTouches[0].clientX;
+  let diff = startX - endX;
+
+  if (Math.abs(diff) < 50) return; // ignore small moves
+
+  if (diff > 0) {
+    currentIndex = (currentIndex + 1) % media.length;
+  } else {
+    currentIndex = (currentIndex - 1 + media.length) % media.length;
+  }
+
+  updateSlider();
+});
+
+loadImages();
+</script>
+
+</body>
+</html>
