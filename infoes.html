@@ -11,6 +11,31 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .offer-gallery {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 10px;
+    }
+
+    .offer-gallery img {
+      width: 100%;
+      display: block;
+      border-radius: 20px;
+    }
+
+    .offer-gallery iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: none;
+      border-radius: 20px;
+    }
+  </style>
 </head>
 
 <body>
@@ -23,7 +48,7 @@
       <div class="link-card">
         <div class="link-left">
           <div class="icon-box">
-            <img src="images/offreinfo.png" class="custom-icon big-icon">
+            <img src="images/offreinfo.png" class="custom-icon big-icon" alt="Info">
           </div>
 
           <div>
@@ -38,24 +63,19 @@
 
     <div style="height:20px;"></div>
 
-    <!-- ================= SLIDER ================= -->
-    <section class="slider-container zoom-slider">
+    <!-- ================= MEDIA DISPLAY ================= -->
+    <section class="offer-gallery">
 
-      <div class="slider">
+      <img src="images_infoes/1.jpg" alt="Image 1">
 
-        <button class="slider-btn left" id="prevBtn">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
+      <img src="images_infoes/2.jpg" alt="Image 2">
 
-        <div class="slider-track" id="sliderTrack"></div>
+      <img src="images_infoes/3.jpg" alt="Image 3">
 
-        <button class="slider-btn right" id="nextBtn">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
-      </div>
-
-      <div class="dots" id="dots"></div>
+      <iframe
+        src="https://drive.google.com/file/d/169_hVtHUz4737mKLHi35zJ0K5yZdpOM9/preview"
+        allow="autoplay">
+      </iframe>
 
     </section>
 
@@ -64,111 +84,6 @@
     </footer>
 
   </main>
-
-<script>
-const track = document.getElementById("sliderTrack");
-const dotsContainer = document.getElementById("dots");
-
-let media = [];
-let currentIndex = 0;
-
-/* ================= DATA ================= */
-function loadImages() {
-  media = [
-    { type: "image", src: "images_infoes/1.jpg" },
-    { type: "image", src: "images_infoes/2.jpg" },
-    { type: "image", src: "images_infoes/3.jpg" },
-    {
-      type: "video",
-      src: "https://drive.google.com/file/d/169_hVtHUz4737mKLHi35zJ0K5yZdpOM9/preview"
-    }
-  ];
-
-  buildSlider();
-}
-
-/* ================= BUILD SLIDER ================= */
-function buildSlider() {
-  if (!media.length) return;
-
-  media.forEach((item, index) => {
-
-    const slide = document.createElement("div");
-    slide.classList.add("slide");
-
-    if (item.type === "image") {
-      const img = document.createElement("img");
-      img.src = item.src;
-      slide.appendChild(img);
-    }
-
-    if (item.type === "video") {
-      const iframe = document.createElement("iframe");
-      iframe.src = item.src;
-      iframe.width = "100%";
-      iframe.height = "100%";
-      iframe.style.border = "none";
-      iframe.allow = "autoplay";
-      slide.appendChild(iframe);
-    }
-
-    track.appendChild(slide);
-
-    const dot = document.createElement("div");
-    dot.classList.add("dot");
-    if (index === 0) dot.classList.add("active");
-    dotsContainer.appendChild(dot);
-  });
-
-  updateSlider();
-}
-
-/* ================= SLIDER MOVE ================= */
-function updateSlider() {
-  track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === currentIndex);
-  });
-}
-
-/* ================= BUTTONS ================= */
-document.getElementById("nextBtn").addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % media.length;
-  updateSlider();
-});
-
-document.getElementById("prevBtn").addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + media.length) % media.length;
-  updateSlider();
-});
-
-/* ================= MOBILE SWIPE FIX ================= */
-const slider = document.querySelector(".slider");
-
-let startX = 0;
-
-slider.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-});
-
-slider.addEventListener("touchend", (e) => {
-  let endX = e.changedTouches[0].clientX;
-  let diff = startX - endX;
-
-  if (Math.abs(diff) < 50) return; // ignore small moves
-
-  if (diff > 0) {
-    currentIndex = (currentIndex + 1) % media.length;
-  } else {
-    currentIndex = (currentIndex - 1 + media.length) % media.length;
-  }
-
-  updateSlider();
-});
-
-loadImages();
-</script>
 
 </body>
 </html>
